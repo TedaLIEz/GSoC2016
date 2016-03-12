@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="names">
+        <item>Ted</item>
+        <item>Steve</item>
+        <item>Tim</item>
+        <item>Martin</item>
+        <item>Jian Guo</item>
+        <item>Richard</item>
+        <item>James</item>
+        <item>John</item>
+        <item>Charles</item>
+    </string-array>
+    <string-array name="emails">
+        <item>ted@example.com</item>
+        <item>steve@example.com</item>
+        <item>tim@example.com</item>
+        <item>martin@example.com</item>
+        <item>jianguo@example.com</item>
+        <item>richard@example.com</item>
+        <item>james@example.com</item>
+        <item>john@example.com</item>
+        <item>charles@example.com</item>
+    </string-array>
+    <string-array name="creations">
+        <item>Created on 10/10/2010 10:00</item>
+        <item>Created on 10/11/2010 10:00</item>
+        <item>Created on 10/12/2010 10:00</item>
+        <item>Created on 10/13/2010 10:00</item>
+        <item>Created on 10/14/2010 10:00</item>
+        <item>Created on 10/15/2010 10:00</item>
+        <item>Created on 10/16/2010 10:00</item>
+        <item>Created on 10/17/2010 10:00</item>
+        <item>Created on 10/18/2010 10:00</item>
+    </string-array>
+</resources>

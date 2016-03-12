@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:singleLine="true"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:id="@+id/key_list_item_data"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/key_list_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Main User id"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/key_list_item_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="user@example.com"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/key_list_item_creation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="visible"
+            android:text="Created on 10/10/2010 10:00"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/key_list_item_slinger_view"
+        android:layout_width="wrap_content"
+        android:layout_height="?android:attr/listPreferredItemHeight"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?android:attr/listDivider" />
+
+        <ImageButton
+            android:id="@+id/key_list_item_slinger_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_repeat_grey_24dp"
+            android:padding="12dp"
+            android:background="?android:selectableItemBackground"
+            android:contentDescription="Exchange Keys"/>
+
+    </LinearLayout>
+
+</LinearLayout>
