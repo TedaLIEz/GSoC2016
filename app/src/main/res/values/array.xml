@@ -33,4 +33,10 @@
         <item>Created on 10/17/2010 10:00</item>
         <item>Created on 10/18/2010 10:00</item>
     </string-array>
+    <string-array name="query_suggestions">
+        <item>John</item>
+        <item>Steve</item>
+        <item>Jian</item>
+        <item>Ladrift</item>
+    </string-array>
 </resources>

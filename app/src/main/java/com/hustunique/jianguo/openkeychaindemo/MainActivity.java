@@ -1,10 +1,7 @@
 package com.hustunique.jianguo.openkeychaindemo;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,18 +9,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.hustunique.jianguo.openkeychaindemo.ui.KeyDetailFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    @Bind(R.id.main_content)
+    BottomSheetLayout bottomSheetLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.navigation)
@@ -36,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     @Bind(R.id.search_view)
     MaterialSearchView materialSearchView;
-    @Bind(R.id.sheets_main)
-    CoordinatorLayout coordinatorLayout;
-
     private ActionBarDrawerToggle mDrawerToggle;
+    //TODO: Some bug in bottomsheet support library currently
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,32 +47,18 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initDrawer();
         initFab();
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(coordinatorLayout);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
+        initBottomSheet();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         KeyAdapter keyAdapter = new KeyAdapter(this);
         keyAdapter.setOnItemListener(new KeyAdapter.OnMyItemClickListener() {
             @Override
             public void onClick() {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
-//                bottomSheetDialog.setContentView(R.layout.dialog_key);
-//                bottomSheetDialog.show();
+                new KeyDetailFragment().show(getSupportFragmentManager(), R.id.main_content);
             }
         });
         mRecyclerView.setAdapter(keyAdapter);
-
         materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+
             @Override
             public void onSearchViewShown() {
                 mFam.setVisibility(View.GONE);
@@ -85,8 +71,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
 
+    }
 
+    private void initBottomSheet() {
+        bottomSheetLayout.setPeekOnDismiss(true);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        bottomSheetLayout.setPeekSheetTranslation(displayMetrics.heightPixels / 16 * 11);
     }
 
     private void initDrawer() {
@@ -146,6 +139,5 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
     }
-
 
 }

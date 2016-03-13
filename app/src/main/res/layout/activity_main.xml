@@ -1,88 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    android:layout_width="match_parent"
+<com.flipboard.bottomsheet.BottomSheetLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
     android:layout_height="match_parent"
-    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.widget.DrawerLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/content_main"
-        android:fitsSystemWindows="true"
-        tools:context="com.hustunique.jianguo.openkeychaindemo.MainActivity">
-
-        <android.support.design.widget.AppBarLayout
+        android:id="@+id/drawer_layout">
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-            <FrameLayout
+            android:layout_height="match_parent"
+            android:id="@+id/content_main"
+            android:fitsSystemWindows="true"
+            tools:context="com.hustunique.jianguo.openkeychaindemo.MainActivity">
+
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
-                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" />
-                <com.miguelcatalan.materialsearchview.MaterialSearchView
-                    android:id="@+id/search_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </FrameLayout>
+                    android:layout_height="wrap_content">
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/colorPrimary"
+                        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                        app:popupTheme="@style/AppTheme.PopupOverlay" />
+                    <com.miguelcatalan.materialsearchview.MaterialSearchView
+                        android:id="@+id/search_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
 
-        </android.support.design.widget.AppBarLayout>
+            </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_main" />
+            <include layout="@layout/content_main" />
 
 
-        <include layout="@layout/bottom_sheets_main"/>
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:layout_gravity="end|bottom"
-            android:id="@+id/fab_main"
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/fab_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                app:layout_anchor="@+id/key_list"
+                app:layout_behavior="com.hustunique.jianguo.openkeychaindemo.ui.FloatingActionMenuBehavior"
+                app:layout_anchorGravity="bottom|end"
+                app:fab_addButtonColorNormal="?attr/colorPrimary"
+                app:fab_addButtonColorPressed="?attr/colorPrimaryDark"
+                app:fab_addButtonSize="normal"
+                app:fab_addButtonPlusIconColor="@color/icons"
+                app:fab_expandDirection="up"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_add_cloud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_icon="@drawable/ic_cloud_search_24dp"
+                    app:fab_colorNormal="?attr/colorPrimary"
+                    app:fab_colorPressed="?attr/colorPrimaryDark"
+                    app:fab_title="@string/key_list_fab_search"
+                    app:fab_size="mini" />
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_add_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_icon="@drawable/ic_folder_white_24dp"
+                    app:fab_colorNormal="?attr/colorPrimary"
+                    app:fab_colorPressed="?attr/colorPrimaryDark"
+                    app:fab_title="@string/key_list_fab_import"
+                    app:fab_size="mini" />
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </android.support.design.widget.CoordinatorLayout>
+
+        <android.support.design.widget.NavigationView
+            android:layout_gravity="start"
+            android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            app:fab_addButtonColorNormal="?attr/colorPrimary"
-            app:fab_addButtonColorPressed="?attr/colorPrimaryDark"
-            app:fab_addButtonSize="normal"
-            app:fab_addButtonPlusIconColor="@color/icons"
-            app:fab_expandDirection="up"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp">
+            android:id="@+id/navigation"/>
+    </android.support.v4.widget.DrawerLayout>
+</com.flipboard.bottomsheet.BottomSheetLayout>
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_add_cloud"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_cloud_search_24dp"
-                app:fab_colorNormal="?attr/colorPrimary"
-                app:fab_colorPressed="?attr/colorPrimaryDark"
-                app:fab_title="@string/key_list_fab_search"
-                app:fab_size="mini" />
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_add_file"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fab_icon="@drawable/ic_folder_white_24dp"
-                app:fab_colorNormal="?attr/colorPrimary"
-                app:fab_colorPressed="?attr/colorPrimaryDark"
-                app:fab_title="@string/key_list_fab_import"
-                app:fab_size="mini" />
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
-    </android.support.design.widget.CoordinatorLayout>
-
-    <android.support.design.widget.NavigationView
-        android:layout_gravity="start"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
-        android:id="@+id/navigation"/>
-</android.support.v4.widget.DrawerLayout>
 

@@ -19,9 +19,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:windowSoftInputMode="stateVisible"
             android:name=".ui.KeySearchActivity"
-            android:theme="@style/SearchActivityStyle"></activity>
+            android:theme="@style/SearchActivityStyle"
+            android:windowSoftInputMode="stateVisible" />
     </application>
 
 </manifest>
