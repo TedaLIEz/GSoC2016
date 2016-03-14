@@ -25,9 +25,9 @@
     <style name="AppTheme.SearchActionBar" parent="AppTheme.PopupOverlay">
         <item name="android:background">@color/search_navi</item>
     </style>
+
     <style name="FabMenuStyle">
         <item name="android:background">?attr/fabLabelBackgroundDrawable</item>
         <item name="android:textColor">?attr/colorFabText</item>
     </style>
-
 </resources>

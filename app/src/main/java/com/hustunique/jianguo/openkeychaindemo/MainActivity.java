@@ -2,7 +2,9 @@ package com.hustunique.jianguo.openkeychaindemo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +15,12 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.hustunique.jianguo.openkeychaindemo.ui.KeyDetailFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -32,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @Bind(R.id.fab_main)
-    FloatingActionsMenu mFam;
+    @Bind(R.id.fab)
+    FloatingActionButton mFab;
     @Bind(R.id.key_list)
     RecyclerView mRecyclerView;
     @Bind(R.id.search_view)
     MaterialSearchView materialSearchView;
+    @Bind(R.id.main_container)
+    FrameLayout mContainer;
+
     private ActionBarDrawerToggle mDrawerToggle;
     //TODO: Some bug in bottomsheet support library currently
     @Override
@@ -45,9 +49,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         initDrawer();
         initFab();
         initBottomSheet();
+        initRecyclerView();
+        initSearchView();
+    }
+
+    private void initSearchView() {
+        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+
+            @Override
+            public void onSearchViewShown() {
+                mContainer.setVisibility(View.GONE);
+//                mFab.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                if (mContainer.getVisibility() == View.GONE) {
+                    mContainer.setVisibility(View.VISIBLE);
+                }
+                if (mFab.getVisibility() == View.GONE) {
+                    mFab.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        //TODO: searchView doesn't work properly in AppBarLayout
+        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+    }
+
+    private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         KeyAdapter keyAdapter = new KeyAdapter(this);
         keyAdapter.setOnItemListener(new KeyAdapter.OnMyItemClickListener() {
@@ -57,22 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setAdapter(keyAdapter);
-        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-
-            @Override
-            public void onSearchViewShown() {
-                mFam.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                if (mFam.getVisibility() == View.GONE) {
-                    mFam.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
-
     }
 
     private void initBottomSheet() {
@@ -83,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDrawer() {
-        setSupportActionBar(toolbar);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -97,21 +114,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFab() {
-        FloatingActionButton fileSearch = (FloatingActionButton) mFam.findViewById(R.id.fab_add_file);
-        FloatingActionButton cloudSearch = (FloatingActionButton) mFam.findViewById(R.id.fab_add_cloud);
-        fileSearch.setOnClickListener(new View.OnClickListener() {
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFam.collapse();
-            }
-        });
-        cloudSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFam.collapse();
+                Toast.makeText(MainActivity.this, "Import From file", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
     @Override
