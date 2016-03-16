@@ -1,32 +1,36 @@
 package com.hustunique.jianguo.openkeychaindemo;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.hustunique.jianguo.openkeychaindemo.ui.KeyDetailFragment;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    @Bind(R.id.main_content)
-    BottomSheetLayout bottomSheetLayout;
+//    @Bind(R.id.main_content)
+//    BottomSheetLayout bottomSheetLayout;
+    @Bind(R.id.content_main)
+    CoordinatorLayout mainLayout;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.navigation)
@@ -41,9 +45,15 @@ public class MainActivity extends AppCompatActivity {
     MaterialSearchView materialSearchView;
     @Bind(R.id.main_container)
     FrameLayout mContainer;
-
+    @Bind(R.id.sheets_key_detail)
+    CoordinatorLayout sheetLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    //TODO: Some bug in bottomsheet support library currently
+    private BottomSheetBehavior<CoordinatorLayout> bottomSheetBehavior;
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         initDrawer();
-        initFab();
         initBottomSheet();
+        initFab();
         initRecyclerView();
         initSearchView();
     }
@@ -62,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewShown() {
+                //TODO: Still receive click event when search view is expending
                 mContainer.setVisibility(View.GONE);
-//                mFab.setVisibility(View.GONE);
             }
 
             @Override
@@ -86,17 +96,32 @@ public class MainActivity extends AppCompatActivity {
         keyAdapter.setOnItemListener(new KeyAdapter.OnMyItemClickListener() {
             @Override
             public void onClick() {
-                new KeyDetailFragment().show(getSupportFragmentManager(), R.id.main_content);
+                //TODO: Call onLayoutChild when setState in onCreate, see https://code.google.com/p/android/issues/detail?id=202174
+                bottomSheetBehavior.onLayoutChild(mainLayout, sheetLayout, ViewCompat.LAYOUT_DIRECTION_LTR);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
         mRecyclerView.setAdapter(keyAdapter);
     }
 
     private void initBottomSheet() {
-        bottomSheetLayout.setPeekOnDismiss(true);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        bottomSheetLayout.setPeekSheetTranslation(displayMetrics.heightPixels / 16 * 11);
+        bottomSheetBehavior = BottomSheetBehavior.from(sheetLayout);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mFab.setVisibility(View.GONE);
+                }
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    mFab.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Log.e("slideOffset", slideOffset + "");
+            }
+        });
     }
 
     private void initDrawer() {
@@ -114,12 +139,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFab() {
+
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Import From file", Toast.LENGTH_SHORT).show();
+
             }
         });
+
     }
 
 
