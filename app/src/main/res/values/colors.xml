@@ -6,7 +6,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="search_navi">#ffffff</color>
     <color name="search_navi_dark">#F5F5F5</color>
-
+    <color name="hintColor_default">#727272</color>
+    <color name="textColor_default">#212121</color>
+    <color name="colorBgDark">#E0E0E0</color>
     <color name="translucent_scrim_bottom">#2A000000</color>
     <color name="translucent_scrim_bottom_center">#2A000000</color>
 </resources>

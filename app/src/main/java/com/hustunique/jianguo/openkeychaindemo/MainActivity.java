@@ -1,7 +1,9 @@
 package com.hustunique.jianguo.openkeychaindemo;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -15,20 +17,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroupOverlay;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.hustunique.jianguo.openkeychaindemo.ui.MaterialSearchView;
+import com.hustunique.jianguo.openkeychaindemo.utils.AnimationUtil;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-//    @Bind(R.id.main_content)
-//    BottomSheetLayout bottomSheetLayout;
     @Bind(R.id.content_main)
     CoordinatorLayout mainLayout;
     @Bind(R.id.toolbar)
@@ -50,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private BottomSheetBehavior<CoordinatorLayout> bottomSheetBehavior;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,33 +63,62 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         initDrawer();
-        initBottomSheet();
         initFab();
         initRecyclerView();
         initSearchView();
     }
 
     private void initSearchView() {
-        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-
+        materialSearchView.setQrClickListener(new MaterialSearchView.QrClickListener() {
+            @Override
+            public void onScanClicked() {
+                Intent intent = new IntentIntegrator(MainActivity.this).createScanIntent();
+                startActivityForResult(intent, IntentIntegrator.REQUEST_CODE);
+            }
+        });
+        materialSearchView.setAnimationDuration(AnimationUtil.ANIMATION_DURATION_SHORT);
+        materialSearchView.setSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                //TODO: Still receive click event when search view is expending
-                mContainer.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onSearchViewClosed() {
-                if (mContainer.getVisibility() == View.GONE) {
-                    mContainer.setVisibility(View.VISIBLE);
+                mRecyclerView.removeOnScrollListener(null);
+                Window window = getWindow();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 }
-                if (mFab.getVisibility() == View.GONE) {
-                    mFab.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSearchViewStartShow() {
+                ViewGroupOverlay overlay = mContainer.getOverlay();
+                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        recyclerView.smoothScrollBy(0, 0);
+                    }
+                });
+                final View bgdView = new View(MainActivity.this);
+                bgdView.setBottom(mContainer.getHeight());
+                bgdView.setRight(mContainer.getWidth());
+                bgdView.setAlpha(0.3f);
+                bgdView.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                overlay.add(bgdView);
+                Window window = getWindow();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.setStatusBarColor(getResources().getColor(R.color.colorBgDark));
                 }
             }
         });
         //TODO: searchView doesn't work properly in AppBarLayout
-        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+//        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
     }
 
     private void initRecyclerView() {
@@ -98,31 +129,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick() {
                 //TODO: Call onLayoutChild when setState in onCreate, see https://code.google.com/p/android/issues/detail?id=202174
                 bottomSheetBehavior.onLayoutChild(mainLayout, sheetLayout, ViewCompat.LAYOUT_DIRECTION_LTR);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
         mRecyclerView.setAdapter(keyAdapter);
     }
 
-    private void initBottomSheet() {
-        bottomSheetBehavior = BottomSheetBehavior.from(sheetLayout);
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    mFab.setVisibility(View.GONE);
-                }
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mFab.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                Log.e("slideOffset", slideOffset + "");
-            }
-        });
-    }
 
     private void initDrawer() {
 
@@ -178,4 +190,22 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
+            IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            String scannedContent = scanResult.getContents();
+            Uri uri = Uri.parse(scannedContent);
+            Log.d("searchView", "scanned:" + uri);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (materialSearchView.isSearchOpen()) {
+            materialSearchView.closeSearch();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

@@ -32,7 +32,7 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay"
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-                <com.miguelcatalan.materialsearchview.MaterialSearchView
+                <com.hustunique.jianguo.openkeychaindemo.ui.MaterialSearchView
                     android:id="@+id/search_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -40,6 +40,7 @@
 
 
             <include layout="@layout/content_main" />
+
             <include layout="@layout/sheet_key"/>
             <android.support.design.widget.FloatingActionButton
                 android:layout_margin="@dimen/fab_margin"

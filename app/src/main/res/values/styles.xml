@@ -30,4 +30,5 @@
         <item name="android:background">?attr/fabLabelBackgroundDrawable</item>
         <item name="android:textColor">?attr/colorFabText</item>
     </style>
+
 </resources>

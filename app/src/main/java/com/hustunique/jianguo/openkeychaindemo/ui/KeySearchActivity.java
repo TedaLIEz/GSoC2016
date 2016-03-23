@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.hustunique.jianguo.openkeychaindemo.R;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -30,31 +29,6 @@ public class KeySearchActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("Search from cloud");
-        materialSearchView.showSearch(false);
-        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-//                finish();
-
-            }
-        });
-        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                beginSearch(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
     }
 
     private void beginSearch(String query) {
@@ -64,7 +38,6 @@ public class KeySearchActivity extends AppCompatActivity {
         materialSearchView.closeSearch();
         materialSearchView.clearFocus();
         Log.i("query", query);
-
     }
 
     @Override
