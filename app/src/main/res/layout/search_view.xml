@@ -54,6 +54,14 @@
                 android:layout_toLeftOf="@+id/btn_action_scan"
                 android:layout_toStartOf="@+id/btn_action_scan" />
         </RelativeLayout>
-
+        <View
+            android:background="@color/colorBgDark"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <ListView
+            android:id="@+id/suggestions_list"
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </FrameLayout>

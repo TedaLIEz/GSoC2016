@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        jar="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/instantRunSlicer/debug/jars/1/5/main_sliceb.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="003ef814f19a0797efcb2ede639b8a3827bbecb3">
+        <dex dex="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/dex/debug/folders/1000/5/main_sliceb_0f70ffb80c2d31c3312e1c62fcd340bad520cba4/classes.dex" />
+    </item>
+    <item
+        jar="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/instantRunSlicer/debug/jars/1/1a/dependencies.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ed8db54d2f18ec1a06920c6fff8e09d168ab8034">
+        <dex dex="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/dex/debug/folders/1000/1a/dependencies_286d47ef66b2978d7fae6f83d9acfa9774e96ecf/classes.dex" />
+    </item>
+    <item
+        jar="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/instantRunSlicer/debug/jars/1/5/main_slice.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="bd6384634a63758bd2a2db67e1ae1e1440a5b181">
+        <dex dex="/Users/JianGuo/AndroidProject/OpenKeyChainDemo/app/build/intermediates/transforms/dex/debug/folders/1000/5/main_slice_b68a8d328ed2d17625e3910668de8239432060ef/classes.dex" />
+    </item>
+
+</items>

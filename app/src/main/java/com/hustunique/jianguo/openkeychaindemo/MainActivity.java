@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroupOverlay;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hustunique.jianguo.openkeychaindemo.adapters.KeyAdapter;
 import com.hustunique.jianguo.openkeychaindemo.ui.MaterialSearchView;
 import com.hustunique.jianguo.openkeychaindemo.utils.AnimationUtil;
 
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         materialSearchView.setQrClickListener(new MaterialSearchView.QrClickListener() {
             @Override
             public void onScanClicked() {
+                //TODO: Custom Scan Activity
                 Intent intent = new IntentIntegrator(MainActivity.this).createScanIntent();
                 startActivityForResult(intent, IntentIntegrator.REQUEST_CODE);
             }
@@ -87,29 +88,36 @@ public class MainActivity extends AppCompatActivity {
             public void onSearchViewClosed() {
                 mRecyclerView.removeOnScrollListener(null);
                 Window window = getWindow();
+
+                //Set Status Bar color
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 }
+                mRecyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onSearchViewStartShow() {
-                ViewGroupOverlay overlay = mContainer.getOverlay();
-                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                        recyclerView.smoothScrollBy(0, 0);
-                    }
-                });
-                final View bgdView = new View(MainActivity.this);
-                bgdView.setBottom(mContainer.getHeight());
-                bgdView.setRight(mContainer.getWidth());
-                bgdView.setAlpha(0.3f);
-                bgdView.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-                overlay.add(bgdView);
+//                ViewGroupOverlay overlay = mContainer.getOverlay();
+//                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                    @Override
+//                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                        recyclerView.smoothScrollBy(0, 0);
+//                    }
+//                });
+                //TODO: interrupt the scroll with the view overlay.
+//                final View bgdView = new View(MainActivity.this);
+//                bgdView.setBottom(mContainer.getHeight());
+//                bgdView.setRight(mContainer.getWidth());
+//                bgdView.setAlpha(0.3f);
+//                bgdView.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+//                overlay.add(bgdView);
+                mRecyclerView.setVisibility(View.GONE);
+
                 Window window = getWindow();
+                //Set Status Bar color
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -118,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //TODO: searchView doesn't work properly in AppBarLayout
-//        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+        materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+
     }
 
     private void initRecyclerView() {
@@ -157,11 +166,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Import From file", Toast.LENGTH_SHORT).show();
 
+
             }
         });
 
     }
-
 
 
     @Override
@@ -195,8 +204,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             String scannedContent = scanResult.getContents();
-            Uri uri = Uri.parse(scannedContent);
-            Log.d("searchView", "scanned:" + uri);
+            if (scannedContent != null) {
+                Uri uri = Uri.parse(scannedContent);
+                Log.d("searchView", "scanned:" + uri);
+            }
         }
     }
 

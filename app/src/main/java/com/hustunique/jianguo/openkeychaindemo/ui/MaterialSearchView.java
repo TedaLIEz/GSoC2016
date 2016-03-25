@@ -19,12 +19,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,6 +36,7 @@ import com.hustunique.jianguo.openkeychaindemo.utils.AnimationUtil;
 
 /**
  * Created by JianGuo on 3/19/16.
+ * Integrate ZXing into the searchView, WIP
  */
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {
     public static final int REQUEST_VOICE = 9999;
@@ -41,7 +44,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     ImageButton mBackBtn, mQrBtn, mClearBtn;
     EditText mSearchTextView;
     RelativeLayout mSearchTopBar;
-
+    ListView mSuggestionListView;
     private View mTintView;
     private MenuItem mMenuItem;
     private boolean mIsSearchOpen = false;
@@ -52,6 +55,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private CharSequence mUserQuery;
     private ListAdapter mAdapter;
     private Drawable suggestionIcon;
+
+    private boolean submit = false;
+    private boolean ellipsize = false;
 
     private SearchView.OnQueryTextListener mOnQueryChangeListener;
     private SearchViewListener mSearchViewListener;
@@ -141,8 +147,40 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     //TODO: Show suggestions listView
     private void showSuggestions() {
-
+        if (mAdapter != null && mAdapter.getCount() > 0 && mSuggestionListView.getVisibility() == GONE) {
+            mSuggestionListView.setVisibility(VISIBLE);
+        }
     }
+
+
+    public void setSuggestions(String[] suggestions) {
+        if (suggestions != null && suggestions.length > 0) {
+            mTintView.setVisibility(VISIBLE);
+            final SearchAdapter searchAdapter = new SearchAdapter(mContext, suggestions, suggestionIcon, ellipsize);
+            setAdapter(searchAdapter);
+            setOnHintClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    setQuery((String) searchAdapter.getItem(position), submit);
+                }
+            });
+
+        } else {
+            mSuggestionListView.setVisibility(GONE);
+        }
+    }
+
+
+    public void setOnHintClickListener(AdapterView.OnItemClickListener onHintClickListener) {
+        mSuggestionListView.setOnItemClickListener(onHintClickListener);
+    }
+
+    private void setAdapter(ListAdapter adapter) {
+        mAdapter = adapter;
+        mSuggestionListView.setAdapter(mAdapter);
+        startFilter(mSearchTextView.getText());
+    }
+
 
     private void onTextChanged(CharSequence s) {
         CharSequence text = mSearchTextView.getText();
@@ -182,6 +220,20 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         }
     }
 
+
+    public void setEllipsize(boolean ellipsize) {
+        this.ellipsize = ellipsize;
+    }
+
+
+    /**
+     * Submit the query as soon as a user clicks the hint item
+     *
+     * @param submit true if submit immediately
+     */
+    public void setSubmit(boolean submit) {
+        this.submit = submit;
+    }
 
     public void setMenuItem(MenuItem menuItem) {
         this.mMenuItem = menuItem;
@@ -238,13 +290,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
             }
         };
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            mSearchLayout.setVisibility(View.VISIBLE);
-//            AnimationUtil.reveal(mSearchTopBar, animationListener);
-//
-//        } else {
-            AnimationUtil.fadeInView(mSearchLayout, mAnimationDuration, animationListener);
-//        }
+        AnimationUtil.fadeInView(mSearchLayout, mAnimationDuration, animationListener);
     }
 
     public void closeSearch() {
@@ -281,7 +327,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     //TODO: dismiss suggestions listView
     private void dismissSuggestions() {
-
+        mSuggestionListView.setVisibility(View.GONE);
+        mSuggestionListView.clearFocus();
     }
 
     private void initView() {
@@ -293,6 +340,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mQrBtn = (ImageButton) mSearchLayout.findViewById(R.id.btn_action_scan);
         mClearBtn = (ImageButton) mSearchLayout.findViewById(R.id.btn_action_clear);
         mTintView = mSearchLayout.findViewById(R.id.view_transparent);
+
+        mSuggestionListView = (ListView) mSearchLayout.findViewById(R.id.suggestions_list);
+        mSuggestionListView.setVisibility(GONE);
 
         mQrBtn.setOnClickListener(mOnClickListener);
         mSearchTextView.setOnClickListener(mOnClickListener);
