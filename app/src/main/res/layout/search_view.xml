@@ -60,7 +60,6 @@
             android:layout_height="1dp"/>
         <ListView
             android:id="@+id/suggestions_list"
-            android:background="@android:color/darker_gray"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

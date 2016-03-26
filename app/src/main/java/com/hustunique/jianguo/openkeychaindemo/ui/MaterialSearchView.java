@@ -14,9 +14,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -31,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hustunique.jianguo.openkeychaindemo.R;
+import com.hustunique.jianguo.openkeychaindemo.adapters.SearchAdapter;
 import com.hustunique.jianguo.openkeychaindemo.utils.AnimationUtil;
 
 
@@ -145,7 +148,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    //TODO: Show suggestions listView
     private void showSuggestions() {
         if (mAdapter != null && mAdapter.getCount() > 0 && mSuggestionListView.getVisibility() == GONE) {
             mSuggestionListView.setVisibility(VISIBLE);
@@ -171,7 +173,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     }
 
 
-    public void setOnHintClickListener(AdapterView.OnItemClickListener onHintClickListener) {
+    private void setOnHintClickListener(AdapterView.OnItemClickListener onHintClickListener) {
         mSuggestionListView.setOnItemClickListener(onHintClickListener);
     }
 
@@ -343,7 +345,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
         mSuggestionListView = (ListView) mSearchLayout.findViewById(R.id.suggestions_list);
         mSuggestionListView.setVisibility(GONE);
-
         mQrBtn.setOnClickListener(mOnClickListener);
         mSearchTextView.setOnClickListener(mOnClickListener);
         mBackBtn.setOnClickListener(mOnClickListener);

@@ -5,11 +5,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.hustunique.jianguo.openkeychaindemo.adapters.KeyAdapter;
+import com.hustunique.jianguo.openkeychaindemo.ui.KeyDetailFragment;
 import com.hustunique.jianguo.openkeychaindemo.ui.MaterialSearchView;
 import com.hustunique.jianguo.openkeychaindemo.utils.AnimationUtil;
 
@@ -51,10 +52,7 @@ public class MainActivity extends AppCompatActivity {
     MaterialSearchView materialSearchView;
     @Bind(R.id.main_container)
     FrameLayout mContainer;
-    @Bind(R.id.sheets_key_detail)
-    CoordinatorLayout sheetLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private BottomSheetBehavior<CoordinatorLayout> bottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,48 +84,48 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSearchViewClosed() {
-                mRecyclerView.removeOnScrollListener(null);
-                Window window = getWindow();
 
                 //Set Status Bar color
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
                 }
-                mRecyclerView.setVisibility(View.VISIBLE);
+
+                //TODO: ViewOverlay doesn't work!
+//                mContainer.getOverlay().clear();
+                mContainer.removeViewAt(mContainer.getChildCount() - 1);
             }
 
             @Override
             public void onSearchViewStartShow() {
-//                ViewGroupOverlay overlay = mContainer.getOverlay();
-//                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                    @Override
-//                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                        recyclerView.smoothScrollBy(0, 0);
-//                    }
-//                });
-                //TODO: interrupt the scroll with the view overlay.
-//                final View bgdView = new View(MainActivity.this);
-//                bgdView.setBottom(mContainer.getHeight());
-//                bgdView.setRight(mContainer.getWidth());
-//                bgdView.setAlpha(0.3f);
-//                bgdView.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-//                overlay.add(bgdView);
-                mRecyclerView.setVisibility(View.GONE);
+                //TODO: ViewOverlay doesn't work!
+                View bgdView = new View(MainActivity.this);
+                bgdView.setAlpha(0.3f);
+                bgdView.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                bgdView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                            materialSearchView.closeSearch();
+                        }
+                        return false;
+                    }
+                });
+                mContainer.addView(bgdView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-                Window window = getWindow();
-                //Set Status Bar color
+
+                // Set status bar color
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.setStatusBarColor(getResources().getColor(R.color.colorBgDark));
                 }
             }
         });
-        //TODO: searchView doesn't work properly in AppBarLayout
         materialSearchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
-
     }
 
     private void initRecyclerView() {
@@ -136,9 +134,10 @@ public class MainActivity extends AppCompatActivity {
         keyAdapter.setOnItemListener(new KeyAdapter.OnMyItemClickListener() {
             @Override
             public void onClick() {
-                //TODO: Call onLayoutChild when setState in onCreate, see https://code.google.com/p/android/issues/detail?id=202174
-                bottomSheetBehavior.onLayoutChild(mainLayout, sheetLayout, ViewCompat.LAYOUT_DIRECTION_LTR);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                //TODO: Call onLayoutChild before setState in onCreate, see https://code.google.com/p/android/issues/detail?id=202174
+                KeyDetailFragment keyDetailFragment = new KeyDetailFragment();
+                keyDetailFragment.show(getSupportFragmentManager(), keyDetailFragment.getTag());
+
             }
         });
         mRecyclerView.setAdapter(keyAdapter);

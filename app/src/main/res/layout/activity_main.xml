@@ -41,7 +41,7 @@
 
             <include layout="@layout/content_main" />
 
-            <include layout="@layout/sheet_key"/>
+            <!--<include layout="@layout/sheet_key"/>-->
             <android.support.design.widget.FloatingActionButton
                 android:layout_margin="@dimen/fab_margin"
                 app:layout_behavior="com.hustunique.jianguo.openkeychaindemo.ui.CustomFabBehavior"
