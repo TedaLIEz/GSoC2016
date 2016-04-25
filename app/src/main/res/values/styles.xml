@@ -31,4 +31,8 @@
         <item name="android:textColor">?attr/colorFabText</item>
     </style>
 
+    <style name="Dialog.FullScreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:padding">0dp</item>
+    </style>
+
 </resources>

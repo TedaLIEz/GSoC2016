@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sheets_key_detail"
-    android:fitsSystemWindows="true"
     app:layout_behavior="@string/bottom_sheet_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,7 +10,6 @@
         android:id="@+id/key_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,10 +18,9 @@
             android:id="@+id/key_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             app:expandedTitleMarginStart="72dp"
             app:expandedTitleMarginBottom="55dp"
-            app:title="Key Information"
+            app:title="Information"
             app:contentScrim="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

@@ -1,5 +1,6 @@
 package com.hustunique.jianguo.openkeychaindemo;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO: Call onLayoutChild before setState in onCreate, see https://code.google.com/p/android/issues/detail?id=202174
                 KeyDetailFragment keyDetailFragment = new KeyDetailFragment();
                 keyDetailFragment.show(getSupportFragmentManager(), keyDetailFragment.getTag());
+//                keyDetailFragment.setStyle(android.support.v4.app.DialogFragment.STYLE_NO_TITLE, R.style.Dialog_FullScreen);
 
             }
         });
